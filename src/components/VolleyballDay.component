@@ -1,0 +1,65 @@
+<apex:component id="VolleyballDay" controller="CalendarController" allowDML="true">
+    <apex:attribute name="dayEvents" type="DayEvents" description=""/>
+    <style>
+        .going {
+            color:green;
+        }
+        .not_going {
+            color:red;
+        }
+        div.today {
+            background-color:lightgoldenrodyellow;
+        }
+    </style>
+    <apex:pageBlock >
+        <apex:facet name="header">
+            <div class="{!IF(dayEvents.today, 'pbTitle today', 'pbTitle')}">
+            <h2 class="mainTitle">{!dayEvents.dayName}</h2>
+            </div>
+        </apex:facet>
+        <apex:pageBlockTable value="{!dayEvents.events}" var="event" rendered="{!dayEvents.events.size > 0}"
+                             >
+            <apex:column headerValue="Action" rendered="{!isAuthorized}">
+                <div style="width:80px!important;">
+                <apex:commandLink value="delete" action="{!deleteEvent}" onComplete="location.reload();" >
+                    <apex:param value="{!event.Id}" assignTo="{!eventChoiceId}" name=""/>
+                </apex:commandLink>
+                </div>
+            </apex:column>
+
+            <apex:column headerValue="Answer">
+                <div style="width:100px!important;">
+                    <apex:outputPanel layout="block" rendered="{!event.Player_Presences__r.size == 0}">
+                        <apex:commandLink value=" yes " action="{!makeChoice}" onComplete="location.reload();">
+                            <apex:param value="{!event.Id}" name="EventId" assignTo="{!eventChoiceId}"/>
+                            <apex:param value="Going" name="ChoiceStatus" assignTo="{!eventChoiceResult}"/>
+                        </apex:commandLink>
+                        |
+                        <apex:commandLink value=" no" action="{!makeChoice}" onComplete="location.reload();">
+                            <apex:param value="{!event.Id}" name="EventId" assignTo="{!eventChoiceId}"/>
+                            <apex:param value="Not Going" name="ChoiceStatus" assignTo="{!eventChoiceResult}"/>
+                        </apex:commandLink>
+                    </apex:outputPanel>
+
+                    <apex:outputPanel layout="block" rendered="{!event.Player_Presences__r.size > 0}">
+                        <apex:variable var="status" value="{!event.Player_Presences__r[0].Choice_Status__c}"/>
+                        <apex:image value="/img/msg_icons/confirm32.png" rendered="{!status == 'Going'}"/>
+                        <apex:image value="/img/func_icons/remove12_on.gif" rendered="{!status != 'Going'}" width="32px" height="32px"/>
+                        <apex:commandLink value=" change" action="{!cancelChoice}" onComplete="location.reload();">
+                            <apex:param value="{!event.Player_Presences__r[0].Id}" name="PresenceId" assignTo="{!cancelChoice}"/>
+                        </apex:commandLink>
+                    </apex:outputPanel>
+                </div>
+            </apex:column>
+
+            <apex:repeat value="{!$ObjectType.Volleyball_Event__c.FieldSets.EventTable}" var="field">
+                <apex:column value="{!event[field]}" onClick="viewEvent('{!event.Id}');"/>
+            </apex:repeat>
+
+        </apex:pageBlockTable>
+
+        <apex:actionFunction name="viewEvent" action="{!viewEvent}" reRender="form">
+            <apex:param name="eventId" value="" assignTo="{!eventChoiceId}"/>
+        </apex:actionFunction>
+    </apex:pageBlock>
+</apex:component>

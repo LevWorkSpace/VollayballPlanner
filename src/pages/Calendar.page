@@ -1,0 +1,36 @@
+<apex:page controller="CalendarController" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"
+           showHeader="false" sideBar="false" cache="false">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>Volleyball</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <apex:stylesheet value="{!$Resource.mobileStyles}"/>
+        <apex:slds />
+    </head>
+    <body>
+    <div id="slds" class="slds-scope center">
+
+        <apex:form id="form">
+            <apex:outputPanel id="calendar" rendered="{!playerId != null}" >
+                <c:HeaderSection showLogout="true" userName="{!playerName}"/>
+
+                <apex:commandButton value="Previous Week" action="{!prevWeek}" reRender="calendar"/>
+                <apex:commandButton value="Current Week" action="{!currentWeek}" reRender="calendar"/>
+                <apex:commandButton value="Next Week" action="{!nextWeek}" reRender="calendar"/>
+                <apex:commandButton value="Generate Defalut Trainings" action="{!generateTrainings}"
+                                    rendered="{!IsAuthorized}" reRender="calendar"/>
+
+                <apex:panelGrid bgcolor="white" columns="7">
+                    <apex:repeat value="{!days}" var="day" rendered="{!days.size>0}">
+                        <c:VolleyballDay dayEvents="{!day}"/>
+                    </apex:repeat>
+                </apex:panelGrid>
+
+            </apex:outputPanel>
+        </apex:form>
+    </div>
+    </body>
+    </html>
+</apex:page>

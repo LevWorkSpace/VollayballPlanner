@@ -1,0 +1,67 @@
+<apex:page standardController="Volleyball_Event__c" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"
+           showHeader="false" sideBar="false" extensions="ViewEventController" cache="false" action="{!addMessage}">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>Volleyball</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <apex:stylesheet value="{!$Resource.mobileStyles}"/>
+        <apex:slds />
+    </head>
+    <body>
+    <script>
+        function setFocusOnLoad() {}
+
+        function allow() {
+            allowSubmission = true;
+        }
+        allowSubmission = false;
+
+        function checkEvents() {
+            if (allowSubmission){
+                document.getElementById('{!$Component.myform}').submit();
+                return true;
+            } else {
+                event.preventDefault();
+                return false;
+            }
+        }
+    </script>
+        <div class="slds-scope center">
+        <apex:pageMessages />
+        <apex:form id="form" onsubmit="checkEvents()" >
+            <c:HeaderSection showLogout="true" userName="{!playerName}"/>
+            <apex:pageBlock >
+                <input type="submit" style="display:none;" />
+                <apex:actionRegion >
+                    <apex:commandButton onclick="allow()" value="Calendar" action="{!toCalendar}"/>
+                </apex:actionRegion>
+                <apex:commandButton onclick="allow()" value="Save" action="{!saveEvent}" rendered="{!IsAuthorized}"/>
+                <apex:actionRegion >
+                    <apex:commandButton onclick="allow()" value="Delete" action="{!deleteEvent}" rendered="{!IsAuthorized}"/>
+                </apex:actionRegion>
+                <apex:commandButton onclick="allow()" value="Clone" action="{!cloneEvent}" rendered="{!IsAuthorized}"/>
+
+                <apex:pageBlockSection columns="1" rendered="{!!IsAuthorized}">
+                    <apex:repeat value="{!$ObjectType.Volleyball_Event__c.FieldSets.EventSection}" var="field">
+                        <apex:outputField value="{!Volleyball_Event__c[field]}"/>
+                    </apex:repeat>
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection columns="1" rendered="{!IsAuthorized}">
+                    <apex:repeat value="{!$ObjectType.Volleyball_Event__c.FieldSets.EventSection}" var="field">
+                        <apex:inputField value="{!Volleyball_Event__c[field]}" style="width:100%!important;" />
+                    </apex:repeat>
+                </apex:pageBlockSection>
+                <apex:pageBlockTable value="{!players}" var="p" rendered="{!players.size > 0}">
+                    <apex:column value="{!p.Player__r.Name}"/>
+                    <apex:column value="{!p.Is_Going__c}"/>
+                </apex:pageBlockTable>
+                <apex:outputLabel value="Nobody is going to this event." rendered="{!players.size == 0}"/>
+            </apex:pageBlock>
+        </apex:form>
+        </div>
+    </body>
+    </html>
+</apex:page>

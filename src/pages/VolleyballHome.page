@@ -1,0 +1,36 @@
+<apex:page controller="VolleyBallHomeController" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0"
+           showHeader="false" sideBar="false" cache="false" action="{!checkAuthorization}">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>Volleyball</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <apex:stylesheet value="{!$Resource.mobileStyles}"/>
+        <apex:slds />
+    </head>
+    <body>
+    <div id="slds" class="slds-scope">
+        <apex:form id="form">
+            <c:HeaderSection label="Volleyball Planner" showLogout="false"/>
+            <apex:pageBlock id="pb" title="Tell me, who are you?">
+                <apex:outputLabel value="Admin Access: "/>
+                <apex:inputSecret id="pass" value="{!password}" />
+
+                <apex:pageBlockTable value="{!players}" var="p">
+                    <apex:column style="height:40px;" headerClass="hide">
+                        <apex:commandLink value="{!p.name}" action="{!login}" styleClass="wholeCellLink">
+                            <apex:param value="{!password}" assignTo="{!password}"/>
+                            <apex:param name="playerId" value="{!p.Id}" assignTo="{!playerId}"/>
+                            <apex:param name="playerName" value="{!p.name}" assignTo="{!playerName}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                </apex:pageBlockTable>
+
+            </apex:pageBlock>
+        </apex:form>
+    </div>
+
+    </body>
+    </html>
+</apex:page>

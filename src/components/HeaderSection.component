@@ -1,0 +1,15 @@
+<apex:component id="HeaderSection" controller="VolleyBallHomeController">
+    <apex:attribute name="label" type="String" description=""/>
+    <apex:attribute name="showLogout" type="Boolean" description=""/>
+    <apex:attribute name="userName" type="String" description=""/>
+    <div style="text-align:right;">
+        <header>
+            {!label}
+            <apex:outputPanel rendered="{!showLogout}">
+                {!userName} -
+                <apex:commandLink action="{!logout}" value=" logout" rendered="{!showLogout}"/>
+            </apex:outputPanel>
+        </header>
+        <apex:image styleClass="logo" value="{!$Resource.volleyball}" width="30" height="30"/>
+    </div>
+</apex:component>

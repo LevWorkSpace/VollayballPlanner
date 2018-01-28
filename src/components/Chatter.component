@@ -1,0 +1,43 @@
+<apex:component allowDML="true" controller="ChatController">
+    <apex:attribute name="event" type="Id" assignTo="{!eventId}" description=""/>
+    <apex:attribute name="player" type="Id" assignTo="{!playerId}" description=""/>
+    <apex:attribute name="playerN" type="String" assignTo="{!playerName}" description=""/>
+
+    <div class="slds-box">
+        <apex:outputPanel id="chat">
+            <apex:outputLabel value="Event Chat"/>
+            <apex:actionRegion >
+                <section role="log" class="slds-chat">
+                    <ul class="slds-chat-list" style="padding:10px">
+                        <apex:repeat value="{!chatMessages}" var="m" rendered="{!chatMessages.size > 0}">
+                            <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                                <div class="slds-chat-message slds-box">
+                                    <div class="slds-chat-message__body">
+                                        <div class="slds-chat-message__text slds-chat-message__text_inbound">
+                                            <span style="resize:none; width:100%">
+                                                <div class="disabledTextArea">
+                                                    <apex:outputField  value="{!m.Text__c}"/>
+                                                </div>
+                                                <label class="slds-form-element__label" for="textarea-id-01">
+                                                    {!m.Player__r.Name}
+                                                        •
+                                                    <apex:outputText value="{0,date, HH:mm (dd MMM)}">
+                                                        <apex:param value="{!m.CreatedDate}"/>
+                                                    </apex:outputText>
+                                                </label>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </apex:repeat>
+                        <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                            <apex:inputTextarea styleClass="slds-textarea" value="{!chatMessage.Text__c}" style="resize:none; border-color:blue;"/>
+                        </li>
+                    </ul>
+                </section>
+                <apex:commandButton value="Comment" action="{!sendChatMessage}" reRender="chat"/>
+            </apex:actionRegion>
+        </apex:outputPanel>
+    </div>
+</apex:component>
